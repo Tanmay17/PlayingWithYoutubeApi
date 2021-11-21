@@ -1,15 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cron = require('node-cron');
-require('dotenv').config();
+const cron = require("node-cron");
+require("dotenv").config();
 
-const { 
-  Plugin: { 
-    Youtube 
-  }, 
-  Service: { 
-    VideoService 
-  } } = require('./lib');
+const {
+  Plugin: { Youtube },
+  Service: { VideoService },
+} = require("./lib");
 
 let app;
 mongoose
@@ -22,14 +19,14 @@ mongoose
     app.listen(3000, async () => {
       await mongoose.connect("mongodb://localhost:27017/fp-assignment");
 
-      cron.schedule( process.env.CRON_SCHEDULE, async ()=>  {
-        console.log('Scheduling Cron');
+      cron.schedule(process.env.CRON_SCHEDULE, async () => {
+        console.log("Scheduling Cron");
         const videoData = await Youtube.searchByKeyword();
         if (videoData.length) {
           await VideoService.insert(videoData);
         }
-        console.log('Cron Scheduled');
-      } );
+        console.log("Cron Scheduled");
+      });
 
       console.log("Server is listening on port 3000");
     });
