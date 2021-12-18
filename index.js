@@ -10,15 +10,14 @@ const {
 
 let app;
 mongoose
-  .connect("mongodb://localhost:27017/fp-assignment", { useNewUrlParser: true })
+  .connect(`${process.env.MONGO_URL}`, { useNewUrlParser: true })
   .then(() => {
     app = express();
     const routes = require("./src/video/routes");
 
     app.use("/", routes);
     app.listen(3000, async () => {
-      await mongoose.connect(process.env.MONGO_URL);
-
+   
       cron.schedule(process.env.CRON_SCHEDULE, async () => {
         console.log("Scheduling Cron");
         const videoData = await Youtube.searchByKeyword();
